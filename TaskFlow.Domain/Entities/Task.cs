@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskFlow.Domain.Enums;
+using TaskFlow.Domain.Exceptions;
 
 namespace TaskFlow.Domain.Entities
 {
@@ -39,11 +40,11 @@ namespace TaskFlow.Domain.Entities
         public void UpdateTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Title cannot be empty.", nameof(title));
+                throw new TaskException.EmptyTitleException();
             if (title.Length > 100)
-                throw new ArgumentException("Title cannot exceed 100 characters.", nameof(title));
-            if (title == Title)
-                throw new ArgumentException("Title must be different from the current title.", nameof(title));
+                throw new TaskException.TitleExceedLimitException(100);
+            if (title == Description)
+                throw new TaskException.TitleException(title);
 
             Title = title;
         }
@@ -56,11 +57,11 @@ namespace TaskFlow.Domain.Entities
         /// <exception cref="ArgumentException">Same description</exception>
         public void UpdateDescription(string description) {
             if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Description cannot be empty.", nameof(description));
+                throw new TaskException.EmptyDescriptionException();
             if (description.Length > 500)
-                throw new ArgumentException("Description cannot exceed 500 characters.", nameof(description));
+                throw new TaskException.DescriptionExceedLimitException(500);
             if (description == Description)
-                throw new ArgumentException("Description must be different from the current description.", nameof(description));
+                throw new TaskException.DescriptionException(description);
             Description = description;
         }
 

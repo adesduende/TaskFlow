@@ -3,13 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskFlow.Domain.Exceptions;
 
 namespace TaskFlow.Domain.Entities
 {
     public class User : Entity
     {
         public string Name { get; private set; }
-        public string Email { get; set; }
+        public string Email { get
+            {
+                return Email;
+            }
+            private set { 
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new UserException.EmptyEmailException();
+                if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                    throw new UserException.InvalidEmailFormatException(value);
+                Email = value;
+            } 
+        }
 
         public User(Guid id, string name, string email)
             : base(id)
@@ -25,11 +37,11 @@ namespace TaskFlow.Domain.Entities
         public void UpdateName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be empty.", nameof(name));
+                throw new UserException.EmptyNameException();
             if (name.Length > 100)
-                throw new ArgumentException("Name cannot exceed 100 characters.", nameof(name));
+                throw new UserException.NameExceedLimitException(100);
             if (name == Name)
-                throw new ArgumentException("Name must be different from the current name.", nameof(name));
+                throw new UserException.NameException(Name);
             Name = name;
         }
     }
