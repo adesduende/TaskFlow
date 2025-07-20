@@ -11,7 +11,7 @@ namespace TaskFlow.Domain.Repositories
     public interface ITaskRepository
     {
         System.Threading.Tasks.Task<IEnumerable<Entities.Task>> GetAllTasksAsync();
-        System.Threading.Tasks.Task<Entities.Task> GetTaskByIdAsync(Guid taskId);
+        System.Threading.Tasks.Task<Entities.Task?> GetTaskByIdAsync(Guid taskId);
         System.Threading.Tasks.Task<IEnumerable<Entities.Task>> GetTasksByUserIdAsync(Guid userId);
         System.Threading.Tasks.Task<IEnumerable<Entities.Task>> GetTasksByStatusAsync(StatusEnum status);
         System.Threading.Tasks.Task<IEnumerable<Entities.Task>> GetTasksByPriorityAsync(PriorityEnum priority);
