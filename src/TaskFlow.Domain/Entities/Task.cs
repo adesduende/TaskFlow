@@ -55,7 +55,8 @@ namespace TaskFlow.Domain.Entities
         /// <exception cref="ArgumentException">Empty description</exception>
         /// <exception cref="ArgumentException">Rate limit exceded</exception>
         /// <exception cref="ArgumentException">Same description</exception>
-        public void UpdateDescription(string description) {
+        public void UpdateDescription(string description)
+        {
             if (string.IsNullOrWhiteSpace(description))
                 throw new TaskException.EmptyDescriptionException();
             if (description.Length > 500)
@@ -97,6 +98,18 @@ namespace TaskFlow.Domain.Entities
             if (timeLimit.HasValue && timeLimit < CreatedAt)
                 throw new ArgumentException("Time limit cannot be in the past.", nameof(timeLimit));
             TimeLimit = timeLimit;
+        }
+
+        /// <summary>
+        /// Assign a user to the task
+        /// </summary>
+        /// <param name="userId"> The ID of the user to assign</param>
+        /// <exception cref="ArgumentException"> User ID cannot be empty</exception>
+        public void AssignUser(Guid userId)
+        {
+            if (userId == Guid.Empty)
+                throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+            UserId = userId;
         }
     }
 }
