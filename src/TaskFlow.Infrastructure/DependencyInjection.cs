@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TaskFlow.Infrastructure.Mediator;
+using TaskFlow.Application.Interfaces;
 
 namespace TaskFlow.Infrastructure
 {
@@ -6,6 +8,7 @@ namespace TaskFlow.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddSingleton<IMediator, TaskFlowMediator>();
             return services;
         }
     }
