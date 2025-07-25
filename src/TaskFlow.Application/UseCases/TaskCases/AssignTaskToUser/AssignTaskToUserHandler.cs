@@ -1,7 +1,7 @@
 ﻿using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Repositories;
 
-namespace TaskFlow.Application.UseCases.TaskCases
+namespace TaskFlow.Application.UseCases.TaskCases.AssignTaskToUser
 {
     public class AssignTaskToUserHandler : IRequestHandler<AssignTaskToUserCommand, bool>
     {

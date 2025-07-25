@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Repositories;
 
-namespace TaskFlow.Application.UseCases.UserCases
+namespace TaskFlow.Application.UseCases.UserCases.CreateUser
 {
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
