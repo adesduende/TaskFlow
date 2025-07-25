@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskFlow.Domain.Entities;
+using TaskFlow.Domain.Exceptions;
 
 namespace TaskFlow.Domain.Aggregates
 {
@@ -84,10 +85,19 @@ namespace TaskFlow.Domain.Aggregates
         /// <param name="name"> The new name for the group.</param>
         public void UpdateName(string name)
         {
-            if (!string.IsNullOrWhiteSpace(name))
+            if(string.IsNullOrWhiteSpace(name))
             {
-                Name = name;
+                throw new GroupException.EmptyNameException();
             }
+            if (name.Length > 100)
+            {
+                throw new GroupException.NameExceedLimitException(100);
+            }
+            if (Name == name)
+            {
+                throw new GroupException.NameException(name);
+            }
+            Name = name;
         }
 
         /// <summary>
@@ -96,10 +106,19 @@ namespace TaskFlow.Domain.Aggregates
         /// <param name="description"> The new description for the group.</param>
         public void UpdateDescription(string description)
         {
-            if (!string.IsNullOrWhiteSpace(description))
+            if (string.IsNullOrWhiteSpace(description))
             {
-                Description = description;
+                throw new GroupException.EmptyDescriptionException();
             }
+            if (description.Length > 500)
+            {
+                throw new GroupException.DescriptionExceedLimitException(500);
+            }
+            if (Description == description)
+            {
+                throw new GroupException.DescriptionException(description);
+            }
+            Description = description;
         }
     }
 }
