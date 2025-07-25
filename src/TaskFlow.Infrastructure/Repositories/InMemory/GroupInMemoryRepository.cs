@@ -15,9 +15,11 @@ namespace TaskFlow.Infrastructure.Repositories.InMemory
         {
             _groups = new List<Group>();
         }
-        public async Task AddAsync(Group group)
+        public async Task<Guid> AddAsync(Group group)
         {
             _groups.Add(group);
+
+            return group.Id;
         }
         public async Task DeleteAsync(Guid id)
         {
