@@ -13,6 +13,7 @@ namespace TaskFlow.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Services
             // Add services to the container.
             builder.Services.AddAuthorization();
 
@@ -25,6 +26,8 @@ namespace TaskFlow.WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            #endregion
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,11 +36,12 @@ namespace TaskFlow.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
+            #region Endpoints
+
+            // This endpoint retrieves a task by its ID.
             app.MapGet("/task/{id}", (string id, IMediator mediator) =>
             {                
                 return true;
@@ -45,6 +49,7 @@ namespace TaskFlow.WebApi
             .WithName("GetTaskById")
             .WithOpenApi();
 
+            // This endpoint retrieves all tasks or filters them based on the provided parameters.
             app.MapGet("/tasks/", 
                 async (
                     [FromQuery]Domain.Enums.StatusEnum? status,
@@ -69,6 +74,7 @@ namespace TaskFlow.WebApi
             .WithName("GetTasks")
             .WithOpenApi();
 
+            // This endpoint creates a new task based on the provided command.
             app.MapPost("/task", async ([FromBody]CreateTaskCommand command, IMediator mediator) =>
             {
                 var id = await mediator.SendAsync(command);
@@ -76,6 +82,39 @@ namespace TaskFlow.WebApi
             })
             .WithName("CreateTask")
             .WithOpenApi();
+
+            //This endpoint delete a task by its ID.
+            app.MapDelete("task/{id:guid}" , async (Guid id, IMediator mediator)=>
+                {
+                    return await mediator.SendAsync(new DeleteTaskCommand(id)) is not false
+                      ? Results.Ok(id)
+                      : Results.NotFound();
+                }
+            )
+                .WithName("DeleteTask")
+                .WithOpenApi();
+
+            //This endpoint change the status of a task by its ID.
+            app.MapPut("task/{id:guid}/status", async (Guid id, [FromBody] Domain.Enums.StatusEnum status, IMediator mediator) =>
+            {
+                return await mediator.SendAsync(new ChangeTaskStatusCommand(id, status)) is not false
+                    ? Results.Ok(id)
+                    : Results.NotFound();
+            })
+                .WithName("ChangeTaskStatus")
+                .WithOpenApi();
+
+            //This endpoint assign a task to a user by its ID.
+            app.MapPut("task/{id:guid}/assign", async (Guid id, [FromBody] Guid userId, IMediator mediator) =>
+            {
+                return await mediator.SendAsync(new AssignTaskToUserCommand(id, userId)) is not false
+                    ? Results.Ok(id)
+                    : Results.NotFound();
+            })
+                .WithName("AssignTask")
+                .WithOpenApi();
+
+            #endregion
 
 
             app.Run();
