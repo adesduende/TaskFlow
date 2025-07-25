@@ -7,7 +7,7 @@ using TaskFlow.Application.DTO;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Entities;
 
-namespace TaskFlow.Application.UseCases.TaskCases
+namespace TaskFlow.Application.UseCases.TaskCases.GetAllTasks
 {
     public record GetAllTasksQuery (
             Domain.Enums.StatusEnum? status = null,

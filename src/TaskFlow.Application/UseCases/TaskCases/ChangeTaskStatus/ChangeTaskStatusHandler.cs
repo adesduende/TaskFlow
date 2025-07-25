@@ -1,7 +1,7 @@
 ﻿using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Repositories;
 
-namespace TaskFlow.Application.UseCases.TaskCases
+namespace TaskFlow.Application.UseCases.TaskCases.ChangeTaskStatus
 {
     public class ChangeTaskStatusHandler : IRequestHandler<ChangeTaskStatusCommand, bool>
     {
