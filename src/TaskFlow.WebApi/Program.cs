@@ -1,5 +1,9 @@
 using TaskFlow.Infrastructure;
 using TaskFlow.Application;
+using TaskFlow.Application.DTO;
+using TaskFlow.Application.UseCases.TaskCases;
+using TaskFlow.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TaskFlow.WebApi
 {
@@ -14,8 +18,8 @@ namespace TaskFlow.WebApi
 
             // Add services to the other layers
             builder.Services
-                .AddInfrastructure()
-                .AddApplication();
+                .AddApplication()
+                .AddInfrastructure();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -34,21 +38,45 @@ namespace TaskFlow.WebApi
 
             app.UseAuthorization();
 
-            app.MapGet("/task/{id}", (string id) =>
-            {
-                
+            app.MapGet("/task/{id}", (string id, IMediator mediator) =>
+            {                
                 return true;
             })
             .WithName("GetTaskById")
             .WithOpenApi();
 
-            app.MapGet("/task", () =>
+            app.MapGet("/tasks/", 
+                async (
+                    [FromQuery]Domain.Enums.StatusEnum? status,
+                    [FromQuery] Domain.Enums.PriorityEnum? priority,
+                    [FromQuery] Guid? user,
+                    [FromQuery] DateTime? timeLimit,
+                    [FromQuery] DateTime? createdAt , 
+                    IMediator mediator
+                    ) =>
             {
-
-                return true;
+                // This endpoint retrieves tasks based on the provided parameters.
+                IEnumerable<TaskDTO> tasks = new List<TaskDTO>();
+                // If no parameters are provided, return all tasks
+                if (status == null && priority == null && user == null && timeLimit == null && createdAt == null)
+                    tasks = await mediator.SendAsync(new GetAllTasksQuery());
+                else
+                    tasks = await mediator.SendAsync(new GetAllTasksQuery(status, priority, user, timeLimit, createdAt));
+                return tasks is not null
+                    ? Results.Ok(tasks)
+                    : Results.NotFound();
             })
             .WithName("GetTasks")
             .WithOpenApi();
+
+            app.MapPost("/task", async ([FromBody]CreateTaskCommand command, IMediator mediator) =>
+            {
+                var id = await mediator.SendAsync(command);
+                return Results.Ok(id);
+            })
+            .WithName("CreateTask")
+            .WithOpenApi();
+
 
             app.Run();
         }
