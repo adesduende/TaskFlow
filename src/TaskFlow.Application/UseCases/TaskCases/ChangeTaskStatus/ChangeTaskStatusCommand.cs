@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskFlow.Application.Interfaces;
 
-namespace TaskFlow.Application.UseCases.TaskCases
+namespace TaskFlow.Application.UseCases.TaskCases.ChangeTaskStatus
 {
     public record ChangeTaskStatusCommand (
             Guid taskId,
