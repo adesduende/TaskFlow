@@ -10,10 +10,14 @@ namespace TaskFlow.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            // Registering the TaskFlowMediator as the implementation of IMediator
             services.AddScoped<IMediator, TaskFlowMediator>();
 
+            // Registering repositories with singleton lifetime
             services.AddSingleton<IUserRepository, UserInMemoryRepository>();
             services.AddSingleton<ITaskRepository, TaskInMemoryRepository>();
+            services.AddSingleton<IGroupRepository, GroupInMemoryRepository>();
+
             return services;
         }
     }
