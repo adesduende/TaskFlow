@@ -6,7 +6,7 @@ using TaskFlow.Domain.Repositories;
 
 namespace TaskFlow.Application.UseCases.TaskCases
 {
-    public class GetAllTasksHandler : IRequestHandler<GetAllTasksCommand, IEnumerable<TaskDTO>>
+    public class GetAllTasksHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDTO>>
     {
         private readonly ITaskRepository _taskRepository;
         public GetAllTasksHandler(ITaskRepository taskRepository)
@@ -14,7 +14,7 @@ namespace TaskFlow.Application.UseCases.TaskCases
             _taskRepository = taskRepository ?? throw new ArgumentNullException(nameof(taskRepository));
         }
 
-        public async Task<IEnumerable<TaskDTO>> HandleAsync(GetAllTasksCommand request)
+        public async Task<IEnumerable<TaskDTO>> HandleAsync(GetAllTasksQuery request)
         {
             return await _taskRepository.GetAllTasksAsync()
                 .ContinueWith(tasks =>
@@ -24,8 +24,8 @@ namespace TaskFlow.Application.UseCases.TaskCases
                         filteredTasks = filteredTasks.Where(t => t.Status == request.status.Value);
                     if (request.priority.HasValue)
                         filteredTasks = filteredTasks.Where(t => t.Priority == request.priority.Value);
-                    if (request.user != null && user.Id != Guid.Empty)
-                        filteredTasks = filteredTasks.Where(t => t.UserId == request.user.Id);
+                    if (request.user != null && request.user != Guid.Empty)
+                        filteredTasks = filteredTasks.Where(t => t.UserId == request.user);
                     if (request.timeLimit.HasValue)
                         filteredTasks = filteredTasks.Where(t => t.TimeLimit == request.timeLimit.Value);
                     if (request.createdAt.HasValue)
