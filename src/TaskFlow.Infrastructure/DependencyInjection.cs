@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TaskFlow.Infrastructure.Mediator;
 using TaskFlow.Application.Interfaces;
+using TaskFlow.Domain.Repositories;
+using TaskFlow.Infrastructure.Mediator;
+using TaskFlow.Infrastructure.Repositories.InMemory;
 
 namespace TaskFlow.Infrastructure
 {
@@ -8,7 +10,10 @@ namespace TaskFlow.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddSingleton<IMediator, TaskFlowMediator>();
+            services.AddScoped<IMediator, TaskFlowMediator>();
+
+            services.AddSingleton<IUserRepository, UserInMemoryRepository>();
+            services.AddSingleton<ITaskRepository, TaskInMemoryRepository>();
             return services;
         }
     }
