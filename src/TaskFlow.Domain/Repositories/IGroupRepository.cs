@@ -9,7 +9,7 @@ namespace TaskFlow.Domain.Repositories
         /// Adds a new group to the repository.
         /// </summary>
         /// <param name="group">The group to add.</param>
-        Task AddAsync(Group group);
+        Task<Guid> AddAsync(Group group);
         /// <summary>
         /// Retrieves a group by its unique identifier.
         /// </summary>
