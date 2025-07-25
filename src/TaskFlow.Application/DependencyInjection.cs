@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using TaskFlow.Application.UseCases.TaskCases;
 using TaskFlow.Application.Interfaces;
+using TaskFlow.Application.UseCases.TaskCases.CreateTask;
 
 namespace TaskFlow.Application
 {
