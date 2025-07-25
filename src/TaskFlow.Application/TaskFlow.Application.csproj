@@ -18,8 +18,4 @@
     <ProjectReference Include="..\TaskFlow.Domain\TaskFlow.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\GroupCases\" />
-  </ItemGroup>
-
 </Project>
