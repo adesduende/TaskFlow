@@ -4,7 +4,7 @@ using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Entities;
 using TaskFlow.Domain.Repositories;
 
-namespace TaskFlow.Application.UseCases.TaskCases
+namespace TaskFlow.Application.UseCases.TaskCases.GetAllTasks
 {
     public class GetAllTasksHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDTO>>
     {

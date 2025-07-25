@@ -8,7 +8,7 @@ using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Entities;
 using TaskFlow.Domain.Repositories;
 
-namespace TaskFlow.Application.UseCases.UserCases
+namespace TaskFlow.Application.UseCases.UserCases.GetUserById
 {
     public class GetUserByIdHandler : IRequestHandler<GetUserByIdCommand , UserDTO>
     {
