@@ -5,5 +5,5 @@ using TaskFlow.Application.Interfaces;
 
 namespace TaskFlow.Application.UseCases.UserCases.GetUserById
 {
-    public record GetUserByIdCommand ( Guid id) : IRequest<UserDTO>;
+    public record GetUserByIdQuery ( Guid id) : IRequest<UserDTO>;
 }

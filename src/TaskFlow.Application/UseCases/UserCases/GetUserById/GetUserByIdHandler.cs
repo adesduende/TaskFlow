@@ -10,7 +10,7 @@ using TaskFlow.Domain.Repositories;
 
 namespace TaskFlow.Application.UseCases.UserCases.GetUserById
 {
-    public class GetUserByIdHandler : IRequestHandler<GetUserByIdCommand , UserDTO>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery , UserDTO>
     {
         private readonly IUserRepository _userRepository;
 
@@ -19,7 +19,7 @@ namespace TaskFlow.Application.UseCases.UserCases.GetUserById
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<UserDTO> HandleAsync(GetUserByIdCommand request)
+        public async Task<UserDTO> HandleAsync(GetUserByIdQuery request)
         {
             if (request.id == Guid.Empty)
                 throw new ArgumentException("User ID cannot be empty.", nameof(request.id));
