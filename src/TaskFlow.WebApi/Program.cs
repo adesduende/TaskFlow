@@ -42,15 +42,12 @@ namespace TaskFlow.WebApi
 
             // This endpoint retrieves a task by its ID.
             app.MapGet("/task/{id}", async (string id, IMediator mediator) =>
-            {                
-                await mediator.SendAsync(new GetTaskByIdQuery(Guid.Parse(id)))
-                    .ContinueWith(task =>
-                    {
-                        if (task.Result is not null)
-                            return Results.Ok(task.Result);
-                        else
-                            return Results.NotFound();
-                    });
+            {
+                var result = await mediator.SendAsync(new GetTaskByIdQuery(Guid.Parse(id)));
+
+                return result is not null
+                ? Results.Ok(result)
+                : Results.NotFound();
             })
             .WithName("GetTaskById")
             .WithOpenApi();
