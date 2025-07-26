@@ -1,7 +1,6 @@
 using TaskFlow.Infrastructure;
 using TaskFlow.Application;
 using TaskFlow.Application.DTO;
-using TaskFlow.Application.UseCases.TaskCases;
 using TaskFlow.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,9 +41,16 @@ namespace TaskFlow.WebApi
             #region Endpoints
 
             // This endpoint retrieves a task by its ID.
-            app.MapGet("/task/{id}", (string id, IMediator mediator) =>
+            app.MapGet("/task/{id}", async (string id, IMediator mediator) =>
             {                
-                return true;
+                await mediator.SendAsync(new GetTaskByIdQuery(Guid.Parse(id)))
+                    .ContinueWith(task =>
+                    {
+                        if (task.Result is not null)
+                            return Results.Ok(task.Result);
+                        else
+                            return Results.NotFound();
+                    });
             })
             .WithName("GetTaskById")
             .WithOpenApi();
