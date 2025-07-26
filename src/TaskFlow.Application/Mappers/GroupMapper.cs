@@ -22,7 +22,8 @@ namespace TaskFlow.Application.Mappers
                 group.Name,
                 group.Description,
                 group.Users.Select(u => u.ToString()).ToList(),
-                group.Tasks.Select(t => t.ToString()).ToList()
+                group.Tasks.Select(t => t.ToString()).ToList(),
+                group.Owner.ToString()
             );
         }
     }

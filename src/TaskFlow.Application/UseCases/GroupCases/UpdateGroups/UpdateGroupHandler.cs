@@ -22,12 +22,15 @@ namespace TaskFlow.Application.UseCases.GroupCases.UpdateGroups
         public async Task<Guid> HandleAsync(UpdateGroupCommand request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+
             var group = await _groupRepository.GetByIdAsync(request.Id);
+
             if (group == null)
             {
                 throw new KeyNotFoundException($"Group with ID {request.Id} not found.");
             }
-            var tempGroup = new Domain.Aggregates.Group(request.Id, request.Name, request.Description, request.Users, request.Tasks);
+
+            var tempGroup = new Domain.Aggregates.Group(request.Id, request.Name, request.Description, request.Users, request.Tasks, group.Owner);
 
             await _groupRepository.UpdateAsync(tempGroup);
 

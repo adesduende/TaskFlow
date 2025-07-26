@@ -7,13 +7,15 @@
         public string Description { get; set; }
         public List<string> Users { get; set; }
         public List<string> Tasks { get; set; }
-        public GroupDTO(string id, string name, string description, List<string> users, List<string> tasks)
+        public string OwnerId { get; set; }
+        public GroupDTO(string id, string name, string description, List<string> users, List<string> tasks, string ownerId)
         {
             Id = id;
             Name = name;
             Description = description;
             Users = users ?? new List<string>();
             Tasks = tasks ?? new List<string>();
+            OwnerId = ownerId;
         }
     }
 }

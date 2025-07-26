@@ -20,7 +20,8 @@ namespace TaskFlow.Application.UseCases.GroupCases.CreateGroup
                     request.name,
                     request.description,
                     request.users ?? new List<Guid>(),
-                    request.tasks ?? new List<Guid>()
+                    request.tasks ?? new List<Guid>(),
+                    request.ownerId
                 ));
 
             return result;

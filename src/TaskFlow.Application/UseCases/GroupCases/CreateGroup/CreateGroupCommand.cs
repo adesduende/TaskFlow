@@ -11,6 +11,7 @@ namespace TaskFlow.Application.UseCases.GroupCases.CreateGroup
         string name,
         string description,
         List<Guid>? users,
-        List<Guid>? tasks
+        List<Guid>? tasks,
+        Guid ownerId
         ) : IRequest<Guid>;
 }

@@ -12,6 +12,8 @@ namespace TaskFlow.Domain.Aggregates
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public Guid Owner { get; private set; }
+        public DateTime CreatedAt { get; private set; }
         public List<Guid> Users { get; private set; }
         public List<Guid> Tasks { get; private set; }
 
@@ -21,13 +23,15 @@ namespace TaskFlow.Domain.Aggregates
         /// <param name="id"> The unique identifier for the group.</param>
         /// <param name="name"> The name of the group.</param>
         /// <param name="description"> The description of the group.</param>
-        public Group(Guid id, string name, string description, List<Guid> users, List<Guid> tasks)
+        public Group(Guid id, string name, string description, List<Guid> users, List<Guid> tasks, Guid owner)
         : base(id)
         {
             Name = name;
             Description = description;
             Users = users ?? new List<Guid>();
             Tasks = tasks ?? new List<Guid>();
+            Owner = owner;
+            CreatedAt = DateTime.Now;
         }
 
         /// <summary>
