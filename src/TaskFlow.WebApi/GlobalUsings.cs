@@ -1,6 +1,15 @@
-﻿global using TaskFlow.Application.UseCases.TaskCases.GetAllTasks;
+﻿// Task Cases
+global using TaskFlow.Application.UseCases.TaskCases.GetAllTasks;
 global using TaskFlow.Application.UseCases.TaskCases.CreateTask;
 global using TaskFlow.Application.UseCases.TaskCases.DeleteTask;
 global using TaskFlow.Application.UseCases.TaskCases.ChangeTaskStatus;
 global using TaskFlow.Application.UseCases.TaskCases.AssignTaskToUser;
 global using TaskFlow.Application.UseCases.TaskCases.GetTaskById;
+// User Cases
+global using TaskFlow.Application.UseCases.UserCases.GetUserById;
+global using TaskFlow.Application.UseCases.UserCases.CreateUser;
+// Group Cases
+global using TaskFlow.Application.UseCases.GroupCases.GetGroupById;
+global using TaskFlow.Application.UseCases.GroupCases.CreateGroup;
+global using TaskFlow.Application.UseCases.GroupCases.DeleteGroup;
+global using TaskFlow.Application.UseCases.GroupCases.UpdateGroups;
