@@ -39,7 +39,7 @@ namespace TaskFlow.WebApi
             app.UseAuthorization();
 
             #region Endpoints
-
+            #region Task Endpoints
             // This endpoint retrieves a task by its ID.
             app.MapGet("/task/{id}", async (string id, IMediator mediator) =>
             {
@@ -116,7 +116,13 @@ namespace TaskFlow.WebApi
             })
                 .WithName("AssignTask")
                 .WithOpenApi();
+            #endregion
+            #region User Endpoints
 
+            #endregion
+            #region Group Endpoints
+
+            #endregion
             #endregion
 
 
