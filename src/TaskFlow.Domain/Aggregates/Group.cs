@@ -124,5 +124,39 @@ namespace TaskFlow.Domain.Aggregates
             }
             Description = description;
         }
+        /// <summary>
+        /// Updates the group with the provided group details.
+        /// </summary>
+        /// <param name="group"> The group details to update.</param>
+        /// <exception cref="ArgumentNullException"> Thrown when the provided group is null.</exception>
+        public void UpdateGroup(Group group)
+        {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group), "Group cannot be null.");
+            }
+            if (group.Name != Name)
+            {
+                UpdateName(group.Name);
+            }
+            if (group.Description != Description)
+            {
+                UpdateDescription(group.Description);
+            }
+            if (group.Users != null && group.Users.Any())
+            {
+                foreach (var user in group.Users)
+                {
+                    AddUser(user);
+                }
+            }
+            if (group.Tasks != null && group.Tasks.Any())
+            {
+                foreach (var task in group.Tasks)
+                {
+                    AddTask(task);
+                }
+            }
+        }
     }
 }
