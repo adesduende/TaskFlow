@@ -20,8 +20,7 @@ namespace TaskFlow.Application
             );
 
             // Register all INotification handlers in the assembly
-            services.AddValidatorsFromAssembly(typeof(CreateTaskHandler).Assembly);
-            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssembly(typeof(CreateTaskValidator).Assembly);
 
             return services;
         }

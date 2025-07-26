@@ -40,7 +40,7 @@ namespace TaskFlow.Infrastructure.Repositories.InMemory
             var existingGroup = _groups.FirstOrDefault(g => g.Id == group.Id);
             if (existingGroup != null)
             {
-                existingGroup = group;
+                existingGroup.UpdateGroup(group);
             }
             else
             {
