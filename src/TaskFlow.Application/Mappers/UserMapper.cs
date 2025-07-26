@@ -19,7 +19,8 @@ namespace TaskFlow.Application.Mappers
             return new DTO.UserDTO(
                 user.Id.ToString(),
                 user.Name,
-                user.Email
+                user.Email,
+                user.Password
             );
         }
     }

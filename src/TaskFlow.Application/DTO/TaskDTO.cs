@@ -16,7 +16,8 @@ namespace TaskFlow.Application.DTO
         public DateTime CreatedAt { get; set; }
         public DateTime? TimeLimit { get; set; }
         public string UserId { get; set; }
-        public TaskDTO(string id, string title, string description, string priority, string status, DateTime createdAt, DateTime? timeLimit, string userId)
+        public string GroupId { get; set; }
+        public TaskDTO(string id, string title, string description, string priority, string status, DateTime createdAt, DateTime? timeLimit, string userId, string groupId)
         {
             Id = id;
             Title = title;
@@ -26,6 +27,7 @@ namespace TaskFlow.Application.DTO
             CreatedAt = createdAt;
             TimeLimit = timeLimit;
             UserId = userId;
+            GroupId = groupId;
         }
     }
 }

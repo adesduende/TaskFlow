@@ -17,8 +17,21 @@ namespace TaskFlow.Domain.Entities
         public DateTime CreatedAt { get; private set; }
         public DateTime? TimeLimit { get; private set; }
         public Guid? UserId { get; private set; }
+        public Guid? GroupId { get; private set; }
 
-        public Task(Guid id, string title, string description, PriorityEnum priority, StatusEnum status, DateTime createdAt, DateTime? timeLimit, Guid? userId)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Task"/> class with a unique identifier, title, description, priority, status, creation date, time limit, and user ID.
+        /// </summary>
+        /// <param name="id"> The unique identifier for the task.</param>
+        /// <param name="title"> The title of the task.</param>
+        /// <param name="description"> The description of the task.</param>
+        /// <param name="priority"> The priority of the task.</param>
+        /// <param name="status"> The status of the task.</param>
+        /// <param name="createdAt"> The date and time when the task was created.</param>
+        /// <param name="timeLimit"> The time limit for the task, if any.</param>
+        /// <param name="userId"> The ID of the user assigned to the task, if any.</param>
+        /// <param name="groupId"> The ID of the group assigned to the task, if any.</param>
+        public Task(Guid id, string title, string description, PriorityEnum priority, StatusEnum status, DateTime createdAt, DateTime? timeLimit, Guid userId, Guid? groupId)
             : base(id)
         {
             Title = title;
@@ -28,8 +41,8 @@ namespace TaskFlow.Domain.Entities
             CreatedAt = createdAt;
             TimeLimit = timeLimit;
             UserId = userId;
+            GroupId = groupId;
         }
-
         /// <summary>
         /// Update the task title
         /// </summary>
@@ -65,7 +78,6 @@ namespace TaskFlow.Domain.Entities
                 throw new TaskException.DescriptionException(description);
             Description = description;
         }
-
         /// <summary>
         /// Update task priority
         /// </summary>
@@ -99,7 +111,6 @@ namespace TaskFlow.Domain.Entities
                 throw new ArgumentException("Time limit cannot be in the past.", nameof(timeLimit));
             TimeLimit = timeLimit;
         }
-
         /// <summary>
         /// Assign a user to the task
         /// </summary>
@@ -110,6 +121,24 @@ namespace TaskFlow.Domain.Entities
             if (userId == Guid.Empty)
                 throw new ArgumentException("User ID cannot be empty.", nameof(userId));
             UserId = userId;
+        }
+        /// <summary>
+        /// Unassign the user from the task
+        /// </summary>
+        /// <param name="groupId"> The ID of the group to assign</param>
+        /// <exception cref="ArgumentException"> Group ID cannot be empty</exception>
+        public void AssignGroup(Guid groupId)
+        {
+            if (groupId == Guid.Empty)
+                throw new ArgumentException("Group ID cannot be empty.", nameof(groupId));
+            GroupId = groupId;
+        }
+        /// <summary>
+        /// Unassign the user from the task
+        /// </summary>
+        public void UnassignGroup()
+        {
+            GroupId = null;
         }
     }
 }

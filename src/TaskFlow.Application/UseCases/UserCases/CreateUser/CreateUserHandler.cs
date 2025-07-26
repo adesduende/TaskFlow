@@ -27,7 +27,7 @@ namespace TaskFlow.Application.UseCases.UserCases.CreateUser
             if (string.IsNullOrWhiteSpace(request.password))
                 throw new ArgumentException("Password cannot be empty.", nameof(request.password));
 
-            var user = new Domain.Entities.User(Guid.NewGuid(), request.name, request.email);
+            var user = new Domain.Entities.User(Guid.NewGuid(), request.name, request.email, request.password);
 
             await _userRepository.AddUserAsync(user);
             //!TODO: Implement password hashing and storage
