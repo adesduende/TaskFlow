@@ -12,7 +12,8 @@ namespace TaskFlow.Application.UseCases.TaskCases.CreateTask
             string description,
             Domain.Enums.PriorityEnum priority,
             DateTime? timeLimit,
-            Guid? userId,
-            Domain.Enums.StatusEnum status = Domain.Enums.StatusEnum.NotStarted
+            Guid userId,
+            Domain.Enums.StatusEnum status = Domain.Enums.StatusEnum.NotStarted,
+            Guid? groupId = null
         ) : IRequest<Guid>;
 }

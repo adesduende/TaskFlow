@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskFlow.Application.Mappers
+﻿namespace TaskFlow.Application.Mappers
 {
     public static class TaskMapper
     {
@@ -24,7 +18,8 @@ namespace TaskFlow.Application.Mappers
                 task.Status.ToString(),
                 task.CreatedAt,
                 task.TimeLimit.HasValue ? task.TimeLimit : null,
-                task.UserId.HasValue ? task.UserId.Value.ToString() : string.Empty
+                task.UserId.HasValue ? task.UserId.Value.ToString() : string.Empty,
+                task.GroupId.HasValue ? task.GroupId.Value.ToString() : string.Empty
             );
         }
     }

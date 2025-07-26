@@ -20,7 +20,8 @@ namespace TaskFlow.Application.UseCases.TaskCases.CreateTask
                 request.status, 
                 DateTime.UtcNow,
                 request.timeLimit,
-                request.userId
+                request.userId,
+                request.groupId
             );
             await _taskRepository.AddTaskAsync(task);
 
