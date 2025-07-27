@@ -12,25 +12,19 @@ namespace TaskFlow.Application.UseCases.UserCases.CreateUser
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
     {
         private readonly IUserRepository _userRepository;
-
-        public CreateUserHandler(IUserRepository userRepository)
+        private readonly IPasswordHasher _passwordHasher;
+        public CreateUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         }
 
         public async Task<Guid> HandleAsync(CreateUserCommand request)
-        {
-            if (string.IsNullOrWhiteSpace(request.name))
-                throw new ArgumentException("Name cannot be empty.", nameof(request.name));
-            if (string.IsNullOrWhiteSpace(request.email))
-                throw new ArgumentException("Email cannot be empty.", nameof(request.email));
-            if (string.IsNullOrWhiteSpace(request.password))
-                throw new ArgumentException("Password cannot be empty.", nameof(request.password));
-
-            var user = new Domain.Entities.User(Guid.NewGuid(), request.name, request.email, request.password);
+        {          
+            var hashedPassword = _passwordHasher.HashPassword(request.password);
+            var user = new Domain.Entities.User(Guid.NewGuid(), request.name, request.email, hashedPassword);
 
             await _userRepository.AddUserAsync(user);
-            //!TODO: Implement password hashing and storage
             return user.Id;
         }
     }
