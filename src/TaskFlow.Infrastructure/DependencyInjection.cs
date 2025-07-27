@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Repositories;
+using TaskFlow.Infrastructure.HashPassword;
 using TaskFlow.Infrastructure.Mediator;
 using TaskFlow.Infrastructure.Repositories.InMemory;
 
@@ -17,6 +18,9 @@ namespace TaskFlow.Infrastructure
             services.AddSingleton<IUserRepository, UserInMemoryRepository>();
             services.AddSingleton<ITaskRepository, TaskInMemoryRepository>();
             services.AddSingleton<IGroupRepository, GroupInMemoryRepository>();
+
+            // Registering the password hasher
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             return services;
         }
