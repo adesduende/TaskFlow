@@ -1,9 +1,13 @@
-using TaskFlow.Infrastructure;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 using TaskFlow.Application;
 using TaskFlow.Application.DTO;
 using TaskFlow.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using FluentValidation;
+using TaskFlow.Infrastructure;
+using TaskFlow.Infrastructure.Auth;
 
 namespace TaskFlow.WebApi
 {
@@ -14,17 +18,77 @@ namespace TaskFlow.WebApi
             var builder = WebApplication.CreateBuilder(args);
 
             #region Services
-            // Add services to the container.
+
+            //Add secrets depending on the environment
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.AddUserSecrets<Program>();
+            }
+            if (builder.Environment.IsProduction())
+            {
+                builder.Configuration.AddEnvironmentVariables();
+            }
+
+            // Add authentication and authorization services
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings!.Issuer,
+                        ValidAudience = jwtSettings!.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings!.SecretKey))
+                    };
+                    options.RequireHttpsMetadata = true;
+                });
             builder.Services.AddAuthorization();
 
             // Add services to the other layers
             builder.Services
                 .AddApplication()
-                .AddInfrastructure();
+                .AddInfrastructure(builder.Configuration);
 
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TaskFlow API", Version = "v1" });
+
+                // Define el esquema de seguridad JWT
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Ejemplo: 'Bearer {token}'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+
+                
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
+
 
             #endregion
 
@@ -37,6 +101,7 @@ namespace TaskFlow.WebApi
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             #region Endpoints
@@ -51,6 +116,7 @@ namespace TaskFlow.WebApi
                 ? Results.Ok(result)
                 : Results.NotFound();
             })
+                .RequireAuthorization()
                 .WithName("GetTaskById")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -77,6 +143,7 @@ namespace TaskFlow.WebApi
                     ? Results.Ok(tasks)
                     : Results.NotFound();
             })
+                .RequireAuthorization()
                 .WithName("GetTasks")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -101,6 +168,7 @@ namespace TaskFlow.WebApi
                 }
 
             })
+                .RequireAuthorization()
                 .WithName("CreateTask")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -113,6 +181,7 @@ namespace TaskFlow.WebApi
                       : Results.NotFound();
                 }
             )
+                .RequireAuthorization()
                 .WithName("DeleteTask")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -124,6 +193,7 @@ namespace TaskFlow.WebApi
                     ? Results.Ok(id)
                     : Results.NotFound();
             })
+                .RequireAuthorization()
                 .WithName("ChangeTaskStatus")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -135,6 +205,7 @@ namespace TaskFlow.WebApi
                     ? Results.Ok(id)
                     : Results.NotFound();
             })
+                .RequireAuthorization()
                 .WithName("AssignTask")
                 .WithTags("Task")
                 .WithOpenApi();
@@ -164,7 +235,32 @@ namespace TaskFlow.WebApi
                     }
 
                 })
+                .RequireAuthorization()
                 .WithName("GetUserById")
+                .WithTags("User")
+                .WithOpenApi();
+
+            // This endpoint login an user in the application
+            app.MapPost("/user/login", async (
+                [FromBody] LoginCommand command,
+                IMediator mediator,
+                IValidator<LoginCommand> validator
+                ) =>
+                {
+                    try
+                    {
+                        await validator.ValidateAndThrowAsync(command);
+                        var jwt = await mediator.SendAsync(command);
+                        return jwt is not null
+                            ? Results.Ok(jwt)
+                            : Results.Unauthorized();
+                    }
+                    catch (ValidationException e)
+                    {
+                        return Results.BadRequest(e.Errors);
+                    }
+                })
+                .WithName("LoginUser")
                 .WithTags("User")
                 .WithOpenApi();
 
@@ -212,6 +308,7 @@ namespace TaskFlow.WebApi
                         return Results.BadRequest(e.Errors);
                     }
                 })
+                .RequireAuthorization()
                 .WithName("CreateGroup")
                 .WithSummary("Create Group")
                 .WithDescription("Creates a new group with the specified details.")
@@ -240,18 +337,19 @@ namespace TaskFlow.WebApi
                     }
 
                 })
+                .RequireAuthorization()
                 .WithName("GetGroupById")
                 .WithTags("Group")
                 .WithOpenApi();
 
             //This endpoint deletes a group by its ID.
             app.MapDelete("/group/{id:guid}", async (
-                Guid id, 
+                Guid id,
                 IMediator mediator,
                 IValidator<DeleteGroupCommand> validator
                 ) =>
                 {
-                    try 
+                    try
                     {
                         var command = new DeleteGroupCommand(id);
                         await validator.ValidateAndThrowAsync(command);
@@ -264,17 +362,18 @@ namespace TaskFlow.WebApi
                         return Results.BadRequest(e.Errors);
                     }
                 })
+                .RequireAuthorization()
                 .WithName("DeleteGroup")
                 .WithTags("Group")
                 .WithOpenApi();
 
             // This endpoint updates a group.
-            app.MapPut("/group", async(
-                    [FromBody]UpdateGroupCommand command,
+            app.MapPut("/group", async (
+                    [FromBody] UpdateGroupCommand command,
                     IMediator mediator,
                     IValidator<UpdateGroupCommand> validator
                 ) =>
-                { 
+                {
                     try
                     {
                         await validator.ValidateAndThrowAsync(command);
@@ -286,6 +385,7 @@ namespace TaskFlow.WebApi
                         return Results.BadRequest(e.Errors);
                     }
                 })
+                .RequireAuthorization()
                 .WithName("UpdateGroup")
                 .WithTags("Group")
                 .WithOpenApi();

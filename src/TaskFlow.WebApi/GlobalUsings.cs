@@ -8,6 +8,7 @@ global using TaskFlow.Application.UseCases.TaskCases.GetTaskById;
 // User Cases
 global using TaskFlow.Application.UseCases.UserCases.GetUserById;
 global using TaskFlow.Application.UseCases.UserCases.CreateUser;
+global using TaskFlow.Application.UseCases.UserCases.Login;
 // Group Cases
 global using TaskFlow.Application.UseCases.GroupCases.GetGroupById;
 global using TaskFlow.Application.UseCases.GroupCases.CreateGroup;
