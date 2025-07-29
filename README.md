@@ -266,6 +266,6 @@ Este proyecto está bajo la **Licencia MIT**. Ver [LICENSE](LICENSE) para más i
 
 ⭐ Si te gusta el proyecto, ¡dale una estrella! ⭐
 
-[Reportar Bug](../../issues) • [Solicitar Feature](../../issues) • [Documentación](../../wiki)
+[Reportar Bug](../../issues/new?labels=bug&title=fix:) • [Solicitar Feature](../../issues/new?labels=enhancement&title=feat:) • [Documentación](../../wiki)
 
 </div>
