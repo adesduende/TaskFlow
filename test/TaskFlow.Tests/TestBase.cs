@@ -5,6 +5,7 @@ using TaskFlow.Application;
 using TaskFlow.Infrastructure;
 using TaskFlow.Domain.Repositories;
 using Moq;
+using TaskFlow.Infrastructure.HashPassword;
 
 namespace TaskFlow.Tests.Application
 {
@@ -12,6 +13,8 @@ namespace TaskFlow.Tests.Application
     {
         protected readonly ServiceProvider ServiceProvider;
         protected readonly IMediator Mediator;
+        protected readonly IPasswordHasher PasswordHasher;
+        protected readonly IJwtTokenGenerator JwtTokenGenerator;
 
         public TestBase()
         {
@@ -30,19 +33,7 @@ namespace TaskFlow.Tests.Application
             services.AddApplication();
             services.AddInfrastructure(configuration);
 
-            // Configurar mocks para servicios externos si es necesario
-            ConfigureMocks(services);
-
             ServiceProvider = services.BuildServiceProvider();
-
-            Mediator = ServiceProvider.GetRequiredService<IMediator>();
-        }
-
-        protected virtual void ConfigureMocks(IServiceCollection services)
-        {
-            services.AddScoped<IUserRepository>(_ => Mock.Of<IUserRepository>());
-            services.AddScoped<ITaskRepository>(_ => Mock.Of<ITaskRepository>());
-            services.AddScoped<IGroupRepository>(_ => Mock.Of<IGroupRepository>());
         }
 
         public void Dispose()
