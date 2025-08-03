@@ -153,7 +153,7 @@ curl -X POST "https://localhost:7xxx/user/login" \
     "password": "Password123!"
   }'
 
-# Respuesta: { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+# Respuesta: { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "userId": "asddas-asdsa-asd-asdas" }
 ```
 
 ### 2️⃣ Gestión de tareas
