@@ -250,9 +250,12 @@ namespace TaskFlow.WebApi
                     try
                     {
                         await validator.ValidateAndThrowAsync(command);
-                        var jwt = await mediator.SendAsync(command);
-                        return jwt is not null
-                            ? Results.Ok(jwt)
+                        var response = await mediator.SendAsync(command);
+                        return response is not null
+                            ? Results.Ok(new { 
+                                token = response.Token,
+                                userId = response.UserId
+                            })
                             : Results.Unauthorized();
                     }
                     catch (ValidationException e)

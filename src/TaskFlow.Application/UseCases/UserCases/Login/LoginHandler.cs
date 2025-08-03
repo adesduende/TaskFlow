@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskFlow.Application.DTO;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Repositories;
 
 namespace TaskFlow.Application.UseCases.UserCases.Login
 {
-    public class LoginHandler : IRequestHandler<LoginCommand, string>
+    public class LoginHandler : IRequestHandler<LoginCommand, LoginDTO>
     {
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUserRepository _userRepository;
@@ -22,7 +23,7 @@ namespace TaskFlow.Application.UseCases.UserCases.Login
             _userRepository = userRepository;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
-        public async Task<string> HandleAsync(LoginCommand request)
+        public async Task<LoginDTO> HandleAsync(LoginCommand request)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.email);
             if (user == null || !_passwordHasher.VerifyPassword(user.Password, request.password))
@@ -32,7 +33,10 @@ namespace TaskFlow.Application.UseCases.UserCases.Login
 
             // Generate JWT token
             var token = _jwtTokenGenerator.GenerateToken(user.Id, user.Email);
-            return token;
+            return new LoginDTO{
+                Token = token,
+                UserId = user.Id.ToString()
+            };
         }
     }
 }
