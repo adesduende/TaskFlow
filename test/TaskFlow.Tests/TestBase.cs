@@ -20,7 +20,7 @@ namespace TaskFlow.Tests.Application
         {
             var services = new ServiceCollection();
             var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
+                .AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     {"JwtSettings:SecretKey", "your-test-secret-key-that-is-at-least-32-characters-long"},
                     {"JwtSettings:Issuer", "test-issuer"},
