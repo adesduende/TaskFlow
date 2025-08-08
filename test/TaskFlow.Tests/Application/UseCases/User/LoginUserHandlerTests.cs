@@ -6,13 +6,13 @@ using TaskFlow.Application.UseCases.UserCases.CreateUser;
 
 namespace TaskFlow.Tests.Application.UseCases.User
 {
-    public class LoginUser : TestBase
+    public class LoginUserHandlerTests : TestBase
     {
         private readonly string _userId;
         private readonly IUserRepository _userRepository;
         private readonly IMediator _mediator;
 
-        public LoginUser() : base()
+        public LoginUserHandlerTests() : base()
         {
             // Configurar el repositorio de usuarios
             _userRepository = ServiceProvider.GetRequiredService<IUserRepository>();
@@ -24,7 +24,7 @@ namespace TaskFlow.Tests.Application.UseCases.User
         }
 
         [Fact]
-        public async Task LoginUser_ShouldReturnSuccess_WhenCredentialsAreValid()
+        public async System.Threading.Tasks.Task LoginUser_ShouldReturnSuccess_WhenCredentialsAreValid()
         {
             // Arrange
             var email = "test@test.com";
@@ -42,7 +42,7 @@ namespace TaskFlow.Tests.Application.UseCases.User
         }
 
         [Fact]
-        public async Task LoginUser_ShouldReturnFailure_WhenCredentialsAreInvalid()
+        public async System.Threading.Tasks.Task LoginUser_ShouldReturnFailure_WhenCredentialsAreInvalid()
         {
             // Arrange
             var email = "test@test.com";
